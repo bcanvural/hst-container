@@ -44,6 +44,9 @@
   <properties>
     <hst.version>5.6.0</hst.version>
     <spring.version>4.3.18.RELEASE</spring.version>
+    <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
+    <hippo-essentials.version>4.6.0</hippo-essentials.version>
+    <slf4j.version>1.7.5</slf4j.version>
   </properties>
 
   <dependencies>
@@ -51,7 +54,7 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
+      <version>${javax.servlet-api.version}</version>
     </dependency>
 
     <!--unit-tester-->
@@ -75,12 +78,12 @@
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-essentials-components-hst</artifactId>
-      <version>4.6.0</version>
+      <version>${hippo-essentials.version}</version>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-      <version>4.6.0</version>
+      <version>${hippo-essentials.version}</version>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7.hst.client-modules</groupId>
@@ -213,24 +216,22 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>4.3.18.RELEASE</version>
+      <version>${spring.version}</version>
       <scope>compile</scope>
     </dependency>
-
 
     <!--logging-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.5</version>
+      <version>${slf4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.5</version>
+      <version>${slf4j.version}</version>
     </dependency>
   </dependencies>
-
 
 
 </project>

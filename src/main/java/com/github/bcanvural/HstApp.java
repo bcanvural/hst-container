@@ -63,7 +63,6 @@ public class HstApp {
         HstDelegateeFilterBean filter = componentManager.getComponent(HstFilter.class.getName());
         try {
             filter.doFilter(hstRequest, hstResponse, null);
-            hstResponse.getNamespace();
             String contentAsString = hstResponse.getContentAsString();
             LOGGER.info(contentAsString);
 
