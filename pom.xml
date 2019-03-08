@@ -30,7 +30,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>App</mainClass>
+              <mainClass>com.github.bcanvural.HstApp</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>
