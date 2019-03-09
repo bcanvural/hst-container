@@ -50,6 +50,18 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         }
     }
 
+    public String[] getYamlResourcesPatterns() {
+        return yamlResourcesPatterns;
+    }
+
+    public void setYamlResourcesPatterns(final String[] yamlResourcesPatterns) {
+        this.yamlResourcesPatterns = yamlResourcesPatterns;
+    }
+
+    public void setCndResourcesPatterns(final String[] cndResourcesPatterns) {
+        this.cndResourcesPatterns = cndResourcesPatterns;
+    }
+
     private void importYamlResources(Session session) throws RepositoryException {
         try {
             for (String yamlResourcePattern : yamlResourcesPatterns) {
@@ -69,19 +81,6 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         for (String cndResourcePattern : cndResourcesPatterns) {
             registerNamespaces(session, resolveResourcePattern(cndResourcePattern));
         }
-    }
-
-
-    public String[] getYamlResourcesPatterns() {
-        return yamlResourcesPatterns;
-    }
-
-    public void setYamlResourcesPatterns(final String[] yamlResourcesPatterns) {
-        this.yamlResourcesPatterns = yamlResourcesPatterns;
-    }
-
-    public void setCndResourcesPatterns(final String[] cndResourcesPatterns) {
-        this.cndResourcesPatterns = cndResourcesPatterns;
     }
 
     private void registerNamespaces(Session session, Resource[] cndResources) throws RepositoryException {
