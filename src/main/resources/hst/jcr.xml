@@ -31,14 +31,6 @@
     <property name="hstJmvEnabledUsers" ref="hstJmvEnabledUsers"/>
   </bean>
 
-  <!--<bean id="javax.jcr.Credentials.default" class="org.hippoecm.hst.core.jcr.SimpleCredentialsFactoryBean">-->
-  <!--<property name="userId" value="${default.repository.user.name}"/>-->
-  <!--<property name="separator" value="${repository.pool.user.name.separator}"/>-->
-  <!--<property name="poolName" value="${default.repository.pool.name}"/>-->
-  <!--<property name="password" value="${default.repository.password}"/>-->
-  <!--<property name="hstJmvEnabledUsers" ref="hstJmvEnabledUsers"/>-->
-  <!--</bean>-->
-
   <!-- default cred that can be used in delegating repository -->
   <bean id="javax.jcr.Credentials.default.delegating" class="org.hippoecm.hst.core.jcr.SimpleCredentialsFactoryBean">
     <property name="userId" value="${default.repository.user.name}"/>
