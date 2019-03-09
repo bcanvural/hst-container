@@ -47,6 +47,7 @@
     <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
     <hippo-essentials.version>4.6.0</hippo-essentials.version>
     <slf4j.version>1.7.5</slf4j.version>
+    <hippo-repository.version>5.6.0</hippo-repository.version>
   </properties>
 
   <dependencies>
@@ -68,6 +69,12 @@
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
       <version>2.0</version>
+    </dependency>
+    <!--repository-->
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-repository-workflow</artifactId>
+      <version>${hippo-repository.version}</version>
     </dependency>
     <!--hst-->
     <dependency>

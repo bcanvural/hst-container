@@ -84,7 +84,6 @@ public class HstApp {
         }
     }
 
-
     private static ModuleDefinition loadModuleDefinition(URL url) throws JAXBException, IOException {
         ModuleDefinition moduleDefinition = null;
 

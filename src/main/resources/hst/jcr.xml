@@ -32,11 +32,11 @@
   </bean>
 
   <!--<bean id="javax.jcr.Credentials.default" class="org.hippoecm.hst.core.jcr.SimpleCredentialsFactoryBean">-->
-    <!--<property name="userId" value="${default.repository.user.name}"/>-->
-    <!--<property name="separator" value="${repository.pool.user.name.separator}"/>-->
-    <!--<property name="poolName" value="${default.repository.pool.name}"/>-->
-    <!--<property name="password" value="${default.repository.password}"/>-->
-    <!--<property name="hstJmvEnabledUsers" ref="hstJmvEnabledUsers"/>-->
+  <!--<property name="userId" value="${default.repository.user.name}"/>-->
+  <!--<property name="separator" value="${repository.pool.user.name.separator}"/>-->
+  <!--<property name="poolName" value="${default.repository.pool.name}"/>-->
+  <!--<property name="password" value="${default.repository.password}"/>-->
+  <!--<property name="hstJmvEnabledUsers" ref="hstJmvEnabledUsers"/>-->
   <!--</bean>-->
 
   <!-- default cred that can be used in delegating repository -->
@@ -93,12 +93,15 @@
   </bean>
 
   <bean id="javax.jcr.Repository" class="com.github.bcanvural.SkeletonRepository" init-method="init" destroy-method="close">
-    <property name="resourceLocations">
+    <property name="cndResourcesPatterns">
       <array value-type="java.lang.String">
-        <value>repository/hst.yaml</value>
-        <value>repository/hippo-configuration.yaml</value>
-        <value>repository/content.yaml</value>
-        <value>repository/users.yaml</value>
+        <value>classpath*:repository/namespaces/**/*.cnd</value>
+      </array>
+    </property>
+
+    <property name="yamlResourcesPatterns">
+      <array value-type="java.lang.String">
+        <value>classpath*:repository/imports/*.yaml</value>
       </array>
     </property>
   </bean>

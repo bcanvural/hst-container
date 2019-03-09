@@ -1,6 +1,7 @@
 package com.github.bcanvural;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 
 import javax.jcr.Node;
@@ -8,19 +9,27 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
+import javax.jcr.nodetype.NodeType;
 
+import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.hippoecm.hst.core.jcr.RuntimeRepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.bloomreach.brxm.jcr.repository.InMemoryJcrRepository;
-import com.bloomreach.brxm.jcr.repository.utils.NodeTypeUtils;
 import com.bloomreach.brxm.jcr.repository.utils.YamlImporter;
-import com.github.bcanvural.HstApp;
 
 import static org.hippoecm.repository.api.HippoNodeType.HIPPO_PATHS;
 
 public class SkeletonRepository extends InMemoryJcrRepository {
 
-    private String[] resourceLocations;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkeletonRepository.class);
+
+    private String[] yamlResourcesPatterns;
+    private String[] cndResourcesPatterns;
 
     public SkeletonRepository() throws RepositoryException, IOException {
     }
@@ -29,13 +38,8 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         Session session = null;
         try {
             session = this.login(new SimpleCredentials("admin", "admin".toCharArray()));
-            registerNamespaces(session);
-            for (String resourceLocation : resourceLocations) {
-                YamlImporter.importPlainYaml(HstApp.class.getClassLoader()
-                                .getResourceAsStream(resourceLocation), session.getRootNode(),
-                        "", "hippostd:folder");
-            }
-            session.save();
+            registerCnds(session);
+            importYamlResources(session);
             recalculateHippoPaths("/content");
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -46,13 +50,73 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         }
     }
 
-    public String[] getResourceLocations() {
-        return resourceLocations;
+    private void importYamlResources(Session session) throws RepositoryException {
+        try {
+            for (String yamlResourcePattern : yamlResourcesPatterns) {
+                Resource[] resources = resolveResourcePattern(yamlResourcePattern);
+                for (Resource resource : resources) {
+                    YamlImporter.importPlainYaml(resource.getInputStream(), session.getRootNode(),
+                            "", "hippostd:folder");
+                }
+            }
+            session.save();
+        } catch (Exception ex) {
+            throw new RepositoryException(ex);
+        }
     }
 
-    public void setResourceLocations(final String[] resourceLocations) {
-        this.resourceLocations = resourceLocations;
+    private void registerCnds(Session session) throws RepositoryException {
+        for (String cndResourcePattern : cndResourcesPatterns) {
+            registerNamespaces(session, resolveResourcePattern(cndResourcePattern));
+        }
     }
+
+
+    public String[] getYamlResourcesPatterns() {
+        return yamlResourcesPatterns;
+    }
+
+    public void setYamlResourcesPatterns(final String[] yamlResourcesPatterns) {
+        this.yamlResourcesPatterns = yamlResourcesPatterns;
+    }
+
+    public void setCndResourcesPatterns(final String[] cndResourcesPatterns) {
+        this.cndResourcesPatterns = cndResourcesPatterns;
+    }
+
+    private void registerNamespaces(Session session, Resource[] cndResources) throws RepositoryException {
+        for (Resource cndResource : cndResources) {
+            try {
+                // Register the custom node types defined in the CND file, using JCR Commons CndImporter
+                NodeType[] nodeTypes = CndImporter.registerNodeTypes(new InputStreamReader(cndResource.getInputStream()), session);
+                for (NodeType nt : nodeTypes) {
+                    LOGGER.debug("Registered: " + nt.getName());
+                }
+            } catch (Exception e) {
+                throw new RepositoryException(e);
+            }
+        }
+    }
+
+    private Resource[] resolveResourcePattern(String pattern) throws RepositoryException {
+        try {
+            ClassLoader cl = this.getClass().getClassLoader();
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+            Resource[] resources = resolver.getResources(pattern);
+            for (Resource resource : resources) {
+                LOGGER.debug("RESOURCE: " + resource.getFilename());
+            }
+            return resources;
+        } catch (Exception e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    /**
+     * Recalculating hippo paths is necessary for the HstQueries
+     *
+     * @param absolutePath
+     */
 
     private void recalculateHippoPaths(String absolutePath) {
         Session session = null;
@@ -108,77 +172,6 @@ public class SkeletonRepository extends InMemoryJcrRepository {
             paths.add(0, subnode.getIdentifier());
             setHippoPath(subnode, paths);
             paths.remove(0);
-        }
-    }
-
-    private static void registerNamespaces(Session session) {
-        try {
-            NodeTypeUtils.createNodeType(session, "hst:hst");
-            NodeTypeUtils.createNodeType(session, "hst:hst");
-            NodeTypeUtils.createNodeType(session, "hst:formdatacontainer");
-            NodeTypeUtils.createNodeType(session, "hst:configuration");
-            NodeTypeUtils.createNodeType(session, "hst:configurations");
-            NodeTypeUtils.createNodeType(session, "hst:pages");
-            NodeTypeUtils.createNodeType(session, "hst:blueprints");
-            NodeTypeUtils.createNodeType(session, "hst:channels");
-            NodeTypeUtils.createNodeType(session, "hst:sites");
-            NodeTypeUtils.createNodeType(session, "hst:virtualhosts");
-            NodeTypeUtils.createNodeType(session, "hst:catalog");
-            NodeTypeUtils.createNodeType(session, "hst:component");
-            NodeTypeUtils.createNodeType(session, "hst:components");
-            NodeTypeUtils.createNodeType(session, "hst:template");
-            NodeTypeUtils.createNodeType(session, "hst:templates");
-            NodeTypeUtils.createNodeType(session, "hst:sitemenus");
-            NodeTypeUtils.createNodeType(session, "hst:sitemenu");
-            NodeTypeUtils.createNodeType(session, "hst:sitemenuitem");
-            NodeTypeUtils.createNodeType(session, "hst:sitemapitemhandlers");
-            NodeTypeUtils.createNodeType(session, "hst:sitemapitem");
-            NodeTypeUtils.createNodeType(session, "hst:sitemap");
-            NodeTypeUtils.createNodeType(session, "hst:containeritempackage");
-            NodeTypeUtils.createNodeType(session, "hst:containeritemcomponent");
-            NodeTypeUtils.createNodeType(session, "hst:containercomponentreference");
-            NodeTypeUtils.createNodeType(session, "hst:workspace");
-            NodeTypeUtils.createNodeType(session, "hst:channel");
-            NodeTypeUtils.createNodeType(session, "hst:channelinfo");
-            NodeTypeUtils.createNodeType(session, "hst:containercomponentfolder");
-            NodeTypeUtils.createNodeType(session, "hst:containercomponent");
-            NodeTypeUtils.createNodeType(session, "hst:virtualhostgroup");
-            NodeTypeUtils.createNodeType(session, "hst:virtualhost");
-            NodeTypeUtils.createNodeType(session, "hst:mount");
-            NodeTypeUtils.createNodeType(session, "hst:site");
-
-            NodeTypeUtils.createNodeType(session, "hipposys:configuration");
-            NodeTypeUtils.createNodeType(session, "hipposys:derivativesfolder");
-            NodeTypeUtils.createNodeType(session, "hipposys:deriveddefinition");
-            NodeTypeUtils.createNodeType(session, "hipposys:propertyreferences");
-            NodeTypeUtils.createNodeType(session, "hipposys:builtinpropertyreference");
-            NodeTypeUtils.createNodeType(session, "hipposys:relativepropertyreference");
-            NodeTypeUtils.createNodeType(session, "hipposys:resolvepropertyreference");
-            NodeTypeUtils.createNodeType(session, "hipposys:userfolder");
-            NodeTypeUtils.createNodeType(session, "hipposys:user");
-
-            NodeTypeUtils.createNodeType(session, "hippostd:foldertype");
-            NodeTypeUtils.createNodeType(session, "hippostd:gallerytype");
-            NodeTypeUtils.createNodeType(session, "hippostd:html");
-            NodeTypeUtils.createNodeType(session, "hippostd:folder");
-            NodeTypeUtils.createNodeType(session, "hippotranslation:id");
-            NodeTypeUtils.createNodeType(session, "hippo:handle");
-            NodeTypeUtils.createNodeType(session, "myhippoproject:author");
-            NodeTypeUtils.createNodeType(session, "myhippoproject:newsdocument");
-            NodeTypeUtils.createNodeType(session, "hippostdpubwf:createdBy");
-            NodeTypeUtils.createNodeType(session, "hippogallerypicker:imagelink", "hippo:facetselect");
-            NodeTypeUtils.createNodeType(session, "resourcebundle:resourcebundle");
-            NodeTypeUtils.createNodeType(session, "hippogallery:stdImageGallery");
-            NodeTypeUtils.createNodeType(session, "hippogallery:imageset");
-            NodeTypeUtils.createNodeType(session, "hippogallery:image");
-            NodeTypeUtils.createNodeType(session, "hippogallery:stdAssetGallery");
-
-            NodeTypeUtils.createMixin(session, "hippotranslation:translated");
-            NodeTypeUtils.createMixin(session, "hippo:named");
-
-
-        } catch (Exception e) {
-
         }
     }
 }
