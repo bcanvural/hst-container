@@ -25,11 +25,6 @@ public class PageModelTest extends AbstractPageModelTest {
         return "classpath*:com/github/bcanvural/beans/*.class,";
     }
 
-    @Override
-    protected String getPageModelAddonPath() {
-        return "pagemodel-addon/module.xml";
-    }
-
     @Test
     public void test() {
         getHstRequest().setRequestURI("/site/resourceapi/news");

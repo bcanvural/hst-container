@@ -20,6 +20,8 @@ public abstract class AbstractPageModelTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPageModelTest.class);
 
+    private static final String PAGEMODEL_ADDON_PATH = "hst/pagemodel-addon/module.xml";
+
     private SpringComponentManager componentManager;
     private MockHstRequest hstRequest;
     private MockHstResponse hstResponse;
@@ -91,17 +93,10 @@ public abstract class AbstractPageModelTest {
 
     protected void setupComponentManager() {
         this.componentManager = new SpringComponentManager();
-        componentManager.setAddonModuleDefinitions(Collections.singletonList(Utils.loadAddonModule(getPageModelAddonPath())));
+        componentManager.setAddonModuleDefinitions(Collections.singletonList(Utils.loadAddonModule(PAGEMODEL_ADDON_PATH)));
         componentManager.initialize();
         HstServices.setComponentManager(componentManager);
     }
-
-    /**
-     * Classpath path without the "classpath:". No leading /
-     *
-     * @return
-     */
-    protected abstract String getPageModelAddonPath();
 
     public SpringComponentManager getComponentManager() {
         return componentManager;
