@@ -8,7 +8,7 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="ignoreUnresolvablePlaceholders" value="true"/>
     <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK"/>
-    <property name="location" value="classpath:/hst/container.properties"/>
+    <property name="location" value="classpath:/com/github/bcanvural/hst/container.properties"/>
   </bean>
   <!--ADDITIONS END-->
 
