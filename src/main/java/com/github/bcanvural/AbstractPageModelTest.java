@@ -1,6 +1,9 @@
 package com.github.bcanvural;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -16,11 +19,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockServletContext;
 
+//TODO investigate component rendering url invocation
 public abstract class AbstractPageModelTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPageModelTest.class);
 
-    private static final String PAGEMODEL_ADDON_PATH = "hst/pagemodel-addon/module.xml";
+    private static final String PAGEMODEL_ADDON_PATH = "com/github/bcanvural/hst/pagemodel-addon/module.xml";
 
     private SpringComponentManager componentManager;
     private MockHstRequest hstRequest;
@@ -82,10 +86,8 @@ public abstract class AbstractPageModelTest {
 
     protected abstract String getAnnotatedHstBeansClasses();
 
-
     protected void setupHstRequest() {
         this.hstRequest = new MockHstRequest();
-//        hstRequest.setRequestURI("/site/resourceapi/news");
         hstRequest.setContextPath("/site");
         hstRequest.setHeader("Host", "localhost:8080");
         hstRequest.setHeader("X-Forwarded-Proto", "http");
@@ -93,10 +95,26 @@ public abstract class AbstractPageModelTest {
 
     protected void setupComponentManager() {
         this.componentManager = new SpringComponentManager();
+        includeAdditionalSpringConfigurations();
         componentManager.setAddonModuleDefinitions(Collections.singletonList(Utils.loadAddonModule(PAGEMODEL_ADDON_PATH)));
         componentManager.initialize();
         HstServices.setComponentManager(componentManager);
     }
+
+    private void includeAdditionalSpringConfigurations() {
+        ArrayList<String> configList = new ArrayList<>(Arrays.asList(this.componentManager.getConfigurationResources()));
+        configList.addAll(contributeSpringConfigurationLocations());
+        this.componentManager.setConfigurationResources(configList);
+    }
+
+    /**
+     * Return any additional spring xml locations to be included in the spring application context
+     * The returned value should be a pattern
+     *
+     * @return
+     */
+
+    protected abstract List<String> contributeSpringConfigurationLocations();
 
     public SpringComponentManager getComponentManager() {
         return componentManager;

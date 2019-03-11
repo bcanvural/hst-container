@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <!-- it is known that 'hstJmvEnabledUsers' should had been 'hstJvmEnabledUsers' but end-projects
        rely on that it is called 'hstJmvEnabledUsers', hence keep as is.
@@ -84,18 +84,26 @@
     <property name="hstJmvEnabledUsers" ref="hstJmvEnabledUsers"/>
   </bean>
 
-  <bean id="javax.jcr.Repository" class="com.github.bcanvural.SkeletonRepository" init-method="init" destroy-method="close">
-    <property name="cndResourcesPatterns">
-      <array value-type="java.lang.String">
-        <value>classpath*:repository/namespaces/**/*.cnd</value>
-      </array>
-    </property>
+  <bean id="cndResourcesPatterns" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <value>classpath*:com/github/bcanvural/repository/namespaces/**/*.cnd</value>
+      </list>
+    </constructor-arg>
+  </bean>
 
-    <property name="yamlResourcesPatterns">
-      <array value-type="java.lang.String">
-        <value>classpath*:repository/imports/*.yaml</value>
-      </array>
-    </property>
+  <bean id="yamlResourcesPatterns" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="javax.jcr.Repository" class="com.github.bcanvural.SkeletonRepository" init-method="init" destroy-method="close">
+    <constructor-arg ref="cndResourcesPatterns"/>
+    <constructor-arg ref="contributedCndResourcesPatterns"/>
+    <constructor-arg ref="yamlResourcesPatterns"/>
+    <constructor-arg ref="contributedYamlResourcesPatterns"/>
   </bean>
 
 </beans>

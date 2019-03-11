@@ -24,7 +24,7 @@ public class Utils {
 
     public static ModuleDefinition loadAddonModule(String addonModuleresourcePath) {
         try {
-            URL addonUrl = HstApp.class.getClassLoader().getResource(addonModuleresourcePath);
+            URL addonUrl = Utils.class.getClassLoader().getResource(addonModuleresourcePath);
             if (addonUrl == null) {
                 throw new IOException("Error while loading the pagemodel addon module");
             }
