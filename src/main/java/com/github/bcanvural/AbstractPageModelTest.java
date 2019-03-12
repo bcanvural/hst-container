@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockServletContext;
 
-//TODO investigate component rendering url invocation
 public abstract class AbstractPageModelTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPageModelTest.class);

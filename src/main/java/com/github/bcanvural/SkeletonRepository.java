@@ -21,7 +21,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.bloomreach.brxm.jcr.repository.InMemoryJcrRepository;
-import com.bloomreach.brxm.jcr.repository.utils.YamlImporter;
+import com.bloomreach.brxm.jcr.repository.utils.ImporterUtils;
 
 import static org.hippoecm.repository.api.HippoNodeType.HIPPO_PATHS;
 
@@ -65,7 +65,7 @@ public class SkeletonRepository extends InMemoryJcrRepository {
             for (String yamlResourcePattern : yamlResourcePatterns) {
                 Resource[] resources = resolveResourcePattern(yamlResourcePattern);
                 for (Resource resource : resources) {
-                    YamlImporter.importPlainYaml(resource.getInputStream(), session.getRootNode(),
+                    ImporterUtils.importYaml(resource.getURL(), session.getRootNode(),
                             "", "hippostd:folder");
                 }
             }
