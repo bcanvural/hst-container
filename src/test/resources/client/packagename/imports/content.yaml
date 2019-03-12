@@ -288,7 +288,7 @@
             hippostdpubwf:lastModifiedBy: admin
             hippostdpubwf:publicationDate: 2014-08-21T17:11:55.239+02:00
             resourcebundle:descriptions: [Title displayed on homepage., Text displayed
-                                                                          on homepage.]
+                on homepage.]
             resourcebundle:id: essentials.homepage
             resourcebundle:keys: [homepage.title, homepage.text]
             resourcebundle:messages: [Home Page, 'Every website comes with its own
@@ -313,7 +313,7 @@
             hippostdpubwf:lastModifiedBy: admin
             hippostdpubwf:publicationDate: 2014-08-21T17:11:55.239+02:00
             resourcebundle:descriptions: [Title displayed when page is not found.,
-                                          Text displayed when page is not found.]
+              Text displayed when page is not found.]
             resourcebundle:id: essentials.pagenotfound
             resourcebundle:keys: [pagenotfound.title, pagenotfound.text]
             resourcebundle:messages: [Page not found (404), 'The page you requested
@@ -336,8 +336,8 @@
             hippostdpubwf:publicationDate: 2014-08-21T17:06:47.420+02:00
             resourcebundle:descriptions: ['Used in the indication, how many results
                 were found. The label is appended to the number of results.', Label
-                                                                                                                          used for the link to the previous page., Label used for the link to
-                                                                                                                                                                     the next page.]
+                used for the link to the previous page., Label used for the link to
+                the next page.]
             resourcebundle:id: essentials.pagination
             resourcebundle:keys: [results.indication, page.previous, page.next]
             resourcebundle:messages: [document(s), previous, next]
@@ -376,8 +376,8 @@
               hippogallery:height: 60
               hippogallery:width: 58
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/viognier-grapes-188185_640.jpg/viognier-grapes-188185_640_thumbnail.jpg
               jcr:lastModified: 2013-11-12T12:15:00+01:00
               jcr:mimeType: image/jpeg
             /hippogallery:original:
@@ -385,8 +385,8 @@
               hippogallery:height: 640
               hippogallery:width: 625
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/viognier-grapes-188185_640.jpg/viognier-grapes-188185_640_original.jpg
               jcr:lastModified: 2013-11-12T12:15:00+01:00
               jcr:mimeType: image/jpeg
         /animal-2883_640.jpg:
@@ -405,8 +405,8 @@
               hippogallery:height: 39
               hippogallery:width: 60
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/animal-2883_640.jpg/animal-2883_640_thumbnail.jpg
               jcr:lastModified: 2013-11-12T12:15:00+01:00
               jcr:mimeType: image/jpeg
             /hippogallery:original:
@@ -414,8 +414,8 @@
               hippogallery:height: 426
               hippogallery:width: 640
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/animal-2883_640.jpg/animal-2883_640_original.jpg
               jcr:lastModified: 2013-11-12T12:15:00+01:00
               jcr:mimeType: image/jpeg
         /snail-193611_640.jpg:
@@ -434,8 +434,8 @@
               hippogallery:height: 45
               hippogallery:width: 60
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/snail-193611_640.jpg/snail-193611_640_thumbnail.jpg
               jcr:lastModified: 2013-11-12T12:13:00+01:00
               jcr:mimeType: image/jpeg
             /hippogallery:original:
@@ -443,8 +443,8 @@
               hippogallery:height: 480
               hippogallery:width: 640
               jcr:data:
-                type: string
-                value: dummystring
+                type: binary
+                resource: content/gallery/myhippoproject/samples/snail-193611_640.jpg/snail-193611_640_original.jpg
               jcr:lastModified: 2013-11-12T12:13:00+01:00
               jcr:mimeType: image/jpeg
   /assets:

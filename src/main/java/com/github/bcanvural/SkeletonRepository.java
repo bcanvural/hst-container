@@ -3,6 +3,7 @@ package com.github.bcanvural;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.jcr.Node;
 import javax.jcr.NodeIterator;
@@ -20,7 +21,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.bloomreach.brxm.jcr.repository.InMemoryJcrRepository;
-import com.bloomreach.brxm.jcr.repository.utils.YamlImporter;
+import com.bloomreach.brxm.jcr.repository.utils.ImporterUtils;
 
 import static org.hippoecm.repository.api.HippoNodeType.HIPPO_PATHS;
 
@@ -28,18 +29,27 @@ public class SkeletonRepository extends InMemoryJcrRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SkeletonRepository.class);
 
-    private String[] yamlResourcesPatterns;
-    private String[] cndResourcesPatterns;
+    private List<String> cndResourcesPatterns;
+    private List<String> yamlResourcesPatterns;
 
-    public SkeletonRepository() throws RepositoryException, IOException {
+    public SkeletonRepository(List<String> cndResourcesPatterns, List<String> contributedCndResourcesPatterns,
+                              List<String> yamlResourcesPatterns, List<String> contributedYamlResourcesPatterns)
+            throws RepositoryException, IOException {
+
+        this.cndResourcesPatterns = cndResourcesPatterns;
+        this.cndResourcesPatterns.addAll(contributedCndResourcesPatterns);
+
+        this.yamlResourcesPatterns = yamlResourcesPatterns;
+        this.yamlResourcesPatterns.addAll(contributedYamlResourcesPatterns);
+
     }
 
     public void init() {
         Session session = null;
         try {
             session = this.login(new SimpleCredentials("admin", "admin".toCharArray()));
-            registerCnds(session);
-            importYamlResources(session);
+            registerCnds(session, cndResourcesPatterns);
+            importYamlResources(session, yamlResourcesPatterns);
             recalculateHippoPaths("/content");
         } catch (RepositoryException e) {
             e.printStackTrace();
@@ -50,34 +60,23 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         }
     }
 
-    public String[] getYamlResourcesPatterns() {
-        return yamlResourcesPatterns;
-    }
-
-    public void setYamlResourcesPatterns(final String[] yamlResourcesPatterns) {
-        this.yamlResourcesPatterns = yamlResourcesPatterns;
-    }
-
-    public void setCndResourcesPatterns(final String[] cndResourcesPatterns) {
-        this.cndResourcesPatterns = cndResourcesPatterns;
-    }
-
-    private void importYamlResources(Session session) throws RepositoryException {
+    private void importYamlResources(Session session, List<String> yamlResourcePatterns) throws RepositoryException {
         try {
-            for (String yamlResourcePattern : yamlResourcesPatterns) {
+            for (String yamlResourcePattern : yamlResourcePatterns) {
                 Resource[] resources = resolveResourcePattern(yamlResourcePattern);
                 for (Resource resource : resources) {
-                    YamlImporter.importPlainYaml(resource.getInputStream(), session.getRootNode(),
+                    ImporterUtils.importYaml(resource.getURL(), session.getRootNode(),
                             "", "hippostd:folder");
                 }
             }
             session.save();
+
         } catch (Exception ex) {
             throw new RepositoryException(ex);
         }
     }
 
-    private void registerCnds(Session session) throws RepositoryException {
+    private void registerCnds(Session session, List<String> cndResourcesPatterns) throws RepositoryException {
         for (String cndResourcePattern : cndResourcesPatterns) {
             registerNamespaces(session, resolveResourcePattern(cndResourcePattern));
         }
