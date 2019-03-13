@@ -1,0 +1,87 @@
+# Hst-TestContainer
+
+Start an hst-container from scratch and potentially run tests against different hst pipelines
+
+### Example with pagemodel api:
+
+```java
+package client.packagename;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.bcanvural.AbstractPageModelTest;
+
+/**
+ * A user (client) of the testing library providing his/her own config/content
+ */
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class PageModelTest extends AbstractPageModelTest {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PageModelTest.class);
+
+    @BeforeAll
+    public void init() {
+        super.init();
+    }
+
+    @AfterAll
+    public void destroy() {
+        super.destroy();
+    }
+
+    @Override
+    protected String getAnnotatedHstBeansClasses() {
+        return "classpath*:client/packagename/beans/*.class,";
+    }
+
+    @Override
+    protected List<String> contributeSpringConfigurationLocations() {
+        return Arrays.asList("/client/packagename/*.xml");
+    }
+
+    @Test
+    public void test() throws IOException {
+        getHstRequest().setRequestURI("/site/resourceapi/news");
+        getHstRequest().setQueryString("_hn:type=component-rendering&_hn:ref=r5_r1_r1");
+        String response1 = invokeFilter();
+    }
+}
+```
+
+### Example spring config
+
+```xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+  <bean id="contributedCndResourcesPatterns" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <value>classpath*:client/packagename/namespaces/**/*.cnd</value>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <bean id="contributedYamlResourcesPatterns" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <value>classpath*:client/packagename/imports/**/*.yaml</value>
+      </list>
+    </constructor-arg>
+  </bean>
+
+</beans>
+
+```
