@@ -38,7 +38,7 @@ public class PageModelTest extends AbstractPageModelTest {
 
     @Override
     protected List<String> contributeSpringConfigurationLocations() {
-        return Arrays.asList("/client/packagename/*.xml");
+        return Arrays.asList("/client/packagename/custom-pagemodel.xml");
     }
 
     @Override

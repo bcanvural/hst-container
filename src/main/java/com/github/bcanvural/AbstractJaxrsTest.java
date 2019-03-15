@@ -1,8 +1,8 @@
 package com.github.bcanvural;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,25 +20,22 @@ import org.hippoecm.hst.site.addon.module.model.ModuleDefinition;
 import org.onehippo.cms7.services.ServletContextRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.DelegatingServletInputStream;
 import org.springframework.mock.web.MockServletContext;
 
-public abstract class AbstractPageModelTest {
+public abstract class AbstractJaxrsTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractPageModelTest.class);
-
-    private static final String PAGEMODEL_ADDON_PATH = "com/github/bcanvural/hst/pagemodel-addon/module.xml";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJaxrsTest.class);
 
     private SpringComponentManager componentManager;
     private MockHstRequest hstRequest;
     private MockHstResponse hstResponse;
 
-    private final static String FILTER_DONE_KEY = "filter.done_" + HstDelegateeFilterBean.class.getName();
+    private static final String FILTER_DONE_KEY = "filter.done_" + HstDelegateeFilterBean.class.getName();
+    private static final int DEFAULT_BYTE_ARRAY_INPUT_STREAM_SIZE = 1024;
 
     public void init() {
         setupComponentManager();
-        setupHstRequest();
-        setupServletContext();
-        setupHstResponse();
     }
 
     /**
@@ -68,6 +65,9 @@ public abstract class AbstractPageModelTest {
         if (hstRequest.getRequestURI() == null || "".equals(hstRequest.getRequestURI())) {
             throw new IllegalStateException("Request URI was missing in hstRequest");
         }
+        if (hstRequest.getMethod() == null) {
+            throw new IllegalStateException(("Method name was missing hstRequest"));
+        }
     }
 
     protected void setupHstResponse() {
@@ -81,7 +81,9 @@ public abstract class AbstractPageModelTest {
                 getAnnotatedHstBeansClasses());
         hstRequest.setServletContext(servletContext);
         componentManager.setServletContext(servletContext);
-        ServletContextRegistry.register(servletContext, ServletContextRegistry.WebAppType.HST);
+        if (ServletContextRegistry.getContext("/site") == null) {
+            ServletContextRegistry.register(servletContext, ServletContextRegistry.WebAppType.HST);
+        }
         HstManagerImpl hstManager = (HstManagerImpl) componentManager.getComponent(HstManager.class);
         hstManager.setServletContext(hstRequest.getServletContext());
     }
@@ -93,33 +95,32 @@ public abstract class AbstractPageModelTest {
         hstRequest.setContextPath("/site");
         hstRequest.setHeader("Host", "localhost:8080");
         hstRequest.setHeader("X-Forwarded-Proto", "http");
+        hstRequest.setInputStream(new DelegatingServletInputStream(new ByteArrayInputStream(new byte[getServletInputStreamSize()])));
+        hstRequest.setScheme("http");
+        hstRequest.setServerName("localhost:8080");
     }
 
     protected void setupComponentManager() {
         this.componentManager = new SpringComponentManager();
         includeAdditionalSpringConfigurations();
         includeAdditionalAddonModules();
-        componentManager.setAddonModuleDefinitions(Collections.singletonList(Utils.loadAddonModule(PAGEMODEL_ADDON_PATH)));
         componentManager.initialize();
         HstServices.setComponentManager(componentManager);
+    }
+
+    private void includeAdditionalAddonModules() {
+        if (contributeAddonModulePaths() != null) {
+            List<ModuleDefinition> moduleDefinitions = contributeAddonModulePaths().stream()
+                    .map(Utils::loadAddonModule)
+                    .collect(Collectors.toList());
+            this.componentManager.setAddonModuleDefinitions(moduleDefinitions);
+        }
     }
 
     private void includeAdditionalSpringConfigurations() {
         ArrayList<String> configList = new ArrayList<>(Arrays.asList(this.componentManager.getConfigurationResources()));
         configList.addAll(contributeSpringConfigurationLocations());
         this.componentManager.setConfigurationResources(configList);
-    }
-
-    private void includeAdditionalAddonModules() {
-        if (contributeAddonModulePaths() != null) {
-            //load pagemodel addon by default
-            ModuleDefinition pageModelAddonDefinition = Utils.loadAddonModule(PAGEMODEL_ADDON_PATH);
-            List<ModuleDefinition> contributedDefinitions = contributeAddonModulePaths().stream()
-                    .map(Utils::loadAddonModule)
-                    .collect(Collectors.toList());
-            contributedDefinitions.add(0, pageModelAddonDefinition); //add pagemodel addon as first
-            this.componentManager.setAddonModuleDefinitions(contributedDefinitions);
-        }
     }
 
     /**
@@ -131,12 +132,11 @@ public abstract class AbstractPageModelTest {
 
     protected abstract List<String> contributeSpringConfigurationLocations();
 
-    /**
-     * Return any additional hst addon module location patterns
-     *
-     * @return
-     */
     protected abstract List<String> contributeAddonModulePaths();
+
+    protected int getServletInputStreamSize() {
+        return DEFAULT_BYTE_ARRAY_INPUT_STREAM_SIZE;
+    }
 
     public SpringComponentManager getComponentManager() {
         return componentManager;
@@ -145,10 +145,4 @@ public abstract class AbstractPageModelTest {
     public MockHstRequest getHstRequest() {
         return hstRequest;
     }
-
-    public void destroy() {
-
-    }
-
-
 }

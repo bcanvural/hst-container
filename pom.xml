@@ -13,6 +13,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <!--Each test should run in separate JVMs!-->
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -53,6 +58,7 @@
     <junit-jupiter.version>5.4.0</junit-jupiter.version>
     <brxm-unit-tester.version>0.2.0</brxm-unit-tester.version>
     <jcr.version>2.0</jcr.version>
+    <commons-logging.version>1.2</commons-logging.version>
   </properties>
 
   <dependencies>
@@ -211,7 +217,7 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
       <version>${spring.version}</version>
-      <scope>test</scope>
+      <scope>compile</scope>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
@@ -223,13 +229,7 @@
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <version>${spring.version}</version>
-      <scope>compile</scope>
+      <version>${commons-logging.version}</version>
     </dependency>
 
     <!--logging-->
@@ -257,6 +257,5 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
 
 </project>

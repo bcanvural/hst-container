@@ -443,6 +443,11 @@
           hst:homepage: root
           hst:mountpoint: /hst:hst/hst:sites/myhippoproject
           hst:pagemodelapi: resourceapi
+          /api:
+            jcr:primaryType: hst:mount
+            jcr:uuid: 94f6a0d8-1f9c-4bd9-aa22-dec49096192e
+            hst:namedpipeline: JaxrsRestPlainPipeline
+            hst:ismapped: false
   /hst:sites:
     jcr:primaryType: hst:sites
     jcr:uuid: c0635a32-8fc5-4f31-8e77-4556e5a1981e
