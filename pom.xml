@@ -59,6 +59,7 @@
     <brxm-unit-tester.version>0.2.0</brxm-unit-tester.version>
     <jcr.version>2.0</jcr.version>
     <commons-logging.version>1.2</commons-logging.version>
+    <hippo-plugin-gallerypicker.version>4.6.0</hippo-plugin-gallerypicker.version>
   </properties>
 
   <dependencies>
@@ -88,6 +89,31 @@
       <version>${hippo-repository.version}</version>
     </dependency>
     <!--hst-->
+
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-plugin-gallerypicker</artifactId>
+      <version>${hippo-plugin-gallerypicker.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms-types</artifactId>
+      <version>${hst.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.cms7.hst.toolkit-resources.addon.toolkit-cnd</groupId>
+      <artifactId>hst-addon-cnd</artifactId>
+      <version>${hst.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.cms7.hst.components</groupId>
+      <artifactId>hst-resourcebundle-cnd</artifactId>
+      <version>${hst.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.onehippo.cms7.hst</groupId>
       <artifactId>hst-client</artifactId>

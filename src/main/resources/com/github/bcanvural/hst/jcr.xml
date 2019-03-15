@@ -87,7 +87,16 @@
   <bean id="cndResourcesPatterns" class="java.util.ArrayList">
     <constructor-arg>
       <list>
-        <value>classpath*:com/github/bcanvural/repository/namespaces/**/*.cnd</value>
+        <value>classpath*:hcm-config/hippo.cnd</value>
+        <value>classpath*:hcm-config/hippostd.cnd</value>
+        <value>classpath*:hcm-config/hippostdpubwf.cnd</value>
+        <value>classpath*:hcm-config/hipposys.cnd</value>
+        <value>classpath*:hcm-config/hippotranslation.cnd</value>
+        <value>classpath*:hcm-config/hst-types.cnd</value>
+        <value>classpath*:hcm-config/resourcebundle.cnd</value>
+        <value>classpath*:hcm-config/frontend.cnd</value>
+        <value>classpath*:hcm-config/gallerypicker-types.cnd</value>
+        <value>classpath*:hcm-config/hippogallery.cnd</value>
       </list>
     </constructor-arg>
   </bean>
