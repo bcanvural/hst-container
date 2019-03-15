@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
 
@@ -14,6 +15,7 @@ import org.hippoecm.hst.container.HstFilter;
 import org.hippoecm.hst.content.tool.DefaultContentBeansTool;
 import org.hippoecm.hst.mock.core.component.MockHstResponse;
 import org.hippoecm.hst.site.HstServices;
+import org.hippoecm.hst.site.addon.module.model.ModuleDefinition;
 import org.onehippo.cms7.services.ServletContextRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +97,7 @@ public abstract class AbstractPageModelTest {
     protected void setupComponentManager() {
         this.componentManager = new SpringComponentManager();
         includeAdditionalSpringConfigurations();
+        includeAdditionalAddonModules();
         componentManager.setAddonModuleDefinitions(Collections.singletonList(Utils.loadAddonModule(PAGEMODEL_ADDON_PATH)));
         componentManager.initialize();
         HstServices.setComponentManager(componentManager);
@@ -106,14 +109,33 @@ public abstract class AbstractPageModelTest {
         this.componentManager.setConfigurationResources(configList);
     }
 
+    private void includeAdditionalAddonModules() {
+        if (contributeAddonModulePaths() != null) {
+            //load pagemodel addon by default
+            ModuleDefinition pageModelAddonDefinition = Utils.loadAddonModule(PAGEMODEL_ADDON_PATH);
+            List<ModuleDefinition> contributedDefinitions = contributeAddonModulePaths().stream()
+                    .map(Utils::loadAddonModule)
+                    .collect(Collectors.toList());
+            contributedDefinitions.add(0, pageModelAddonDefinition); //add pagemodel addon as first
+            this.componentManager.setAddonModuleDefinitions(contributedDefinitions);
+        }
+    }
+
     /**
-     * Return any additional spring xml locations to be included in the spring application context
-     * The returned value should be a pattern
+     * Return any additional spring xml locations to be included in the spring application context The returned value
+     * should be a pattern
      *
      * @return
      */
 
     protected abstract List<String> contributeSpringConfigurationLocations();
+
+    /**
+     * Return any additional hst addon module location patterns
+     *
+     * @return
+     */
+    protected abstract List<String> contributeAddonModulePaths();
 
     public SpringComponentManager getComponentManager() {
         return componentManager;

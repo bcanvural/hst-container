@@ -41,6 +41,11 @@ public class PageModelTest extends AbstractPageModelTest {
         return Arrays.asList("/client/packagename/*.xml");
     }
 
+    @Override
+    protected List<String> contributeAddonModulePaths() {
+        return null;
+    }
+
     @Test
     public void test() throws IOException {
         getHstRequest().setRequestURI("/site/resourceapi/news");

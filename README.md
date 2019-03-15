@@ -48,13 +48,20 @@ public class PageModelTest extends AbstractPageModelTest {
         return Arrays.asList("/client/packagename/*.xml");
     }
 
+    @Override
+    protected List<String> contributeAddonModulePaths() {
+        return null;
+    }
+
     @Test
     public void test() throws IOException {
         getHstRequest().setRequestURI("/site/resourceapi/news");
         getHstRequest().setQueryString("_hn:type=component-rendering&_hn:ref=r5_r1_r1");
         String response1 = invokeFilter();
+        String response2 = invokeFilter();
     }
 }
+
 ```
 
 ### Example spring config
