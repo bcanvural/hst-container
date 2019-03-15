@@ -2,7 +2,7 @@
 
 Start an hst-container from scratch and potentially run tests against different hst pipelines
 
-### Example with pagemodel api (under test directory)::
+### Example with pagemodel api (under test directory):
 
 ```java
 package client.packagename;
