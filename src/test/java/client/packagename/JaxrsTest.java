@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +34,13 @@ public class JaxrsTest extends AbstractJaxrsTest {
 
     @BeforeEach
     public void beforeEach() {
+        setupForNewRequest();
+    }
+
+    private void setupForNewRequest() {
         setupHstRequest();
+        getHstRequest().setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON);
+        getHstRequest().setMethod(HttpMethod.GET);
         setupServletContext();
         setupHstResponse();
     }
@@ -56,7 +64,6 @@ public class JaxrsTest extends AbstractJaxrsTest {
     @Test
     public void testUserEndpoint() {
         String user = "baris";
-        //URI is the part before the query params so they should be stripped out. Setting this is mandatory
         getHstRequest().setRequestURI("/site/api/hello/" + user);
         getHstRequest().setMethod(HttpMethod.GET);
         String response = invokeFilter();
@@ -66,12 +73,10 @@ public class JaxrsTest extends AbstractJaxrsTest {
     @Test
     public void testNewsEndpoint() throws Exception {
         getHstRequest().setRequestURI("/site/api/news");
-        getHstRequest().setRequestURL(new StringBuffer("http://localhost:8080/site/api/news?_type=json"));
         getHstRequest().setMethod(HttpMethod.GET);
         String response = invokeFilter();
         ListItemPagination<NewsItemRep> pageable = new ObjectMapper().readValue(response, new TypeReference<ListItemPagination<NewsItemRep>>() {
         });
-
         Assert.assertEquals("Pageable didn't have enough results", 3, pageable.getItems().size());
     }
 
