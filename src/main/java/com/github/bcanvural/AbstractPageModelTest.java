@@ -32,7 +32,7 @@ public abstract class AbstractPageModelTest {
     private MockHstRequest hstRequest;
     private MockHstResponse hstResponse;
 
-    private final static String FILTER_DONE_KEY = "filter.done_" + HstDelegateeFilterBean.class.getName();
+    private static final String HST_RESET_FILTER = "org.hippoecm.hst.container.HstFilter.reset";
 
     public void init() {
         setupComponentManager();
@@ -56,7 +56,7 @@ public abstract class AbstractPageModelTest {
             String contentAsString = hstResponse.getContentAsString();
             LOGGER.info(contentAsString);
             //important! set the filter done attribute to null for subsequent filter invocations
-            hstRequest.setAttribute(FILTER_DONE_KEY, null);
+            hstRequest.setAttribute(HST_RESET_FILTER, true);
             return contentAsString;
         } catch (Exception e) {
             LOGGER.warn(e.getLocalizedMessage());

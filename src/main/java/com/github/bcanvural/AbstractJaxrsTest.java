@@ -31,7 +31,7 @@ public abstract class AbstractJaxrsTest {
     private MockHstRequest hstRequest;
     private MockHstResponse hstResponse;
 
-    private static final String FILTER_DONE_KEY = "filter.done_" + HstDelegateeFilterBean.class.getName();
+    private static final String HST_RESET_FILTER = "org.hippoecm.hst.container.HstFilter.reset";
     private static final int DEFAULT_BYTE_ARRAY_INPUT_STREAM_SIZE = 1024;
 
     public void init() {
@@ -53,7 +53,8 @@ public abstract class AbstractJaxrsTest {
             String contentAsString = hstResponse.getContentAsString();
             LOGGER.info(contentAsString);
             //important! set the filter done attribute to null for subsequent filter invocations
-            hstRequest.setAttribute(FILTER_DONE_KEY, null);
+            hstRequest.setAttribute(HST_RESET_FILTER, true);
+
             return contentAsString;
         } catch (Exception e) {
             LOGGER.warn(e.getLocalizedMessage());
