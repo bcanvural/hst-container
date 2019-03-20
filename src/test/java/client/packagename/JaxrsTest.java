@@ -1,6 +1,8 @@
 package client.packagename;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.ws.rs.HttpMethod;
@@ -11,12 +13,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.springframework.mock.web.DelegatingServletInputStream;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeCreator;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.POJONode;
 import com.github.bcanvural.AbstractJaxrsTest;
 
 import client.packagename.model.ListItemPagination;
+import client.packagename.model.NewsDocument;
 import client.packagename.model.NewsItemRep;
 import junit.framework.Assert;
 
@@ -78,6 +86,24 @@ public class JaxrsTest extends AbstractJaxrsTest {
         ListItemPagination<NewsItemRep> pageable = new ObjectMapper().readValue(response, new TypeReference<ListItemPagination<NewsItemRep>>() {
         });
         Assert.assertEquals("Pageable didn't have enough results", 3, pageable.getItems().size());
+    }
+
+    @Test
+    public void testCreateNewNews() throws Exception {
+        getHstRequest().setRequestURI("/site/api/news/create");
+        getHstRequest().setMethod(HttpMethod.POST);
+        getHstRequest().setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode newsNode = mapper.createObjectNode();
+        newsNode.put("title", "This is title");
+        newsNode.put("introduction", "This is introduction");
+
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(mapper.writeValueAsBytes(newsNode));
+        getHstRequest().setInputStream(new DelegatingServletInputStream(byteArrayInputStream));
+
+        String response = invokeFilter();
+        Assert.assertNotNull(response);
     }
 
 }

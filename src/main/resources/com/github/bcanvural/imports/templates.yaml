@@ -1,0 +1,273 @@
+/hippo:queries:
+  jcr:primaryType: hipposys:queryfolder
+  /hippo:templates:
+    jcr:primaryType: hipposys:queryfolder
+    /new-document:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:icon: adddocument_ico
+      hippostd:modify: [./_name, $name, './hippotranslation:locale', $inherited, './hippotranslation:id',
+                        $uuid, './hippostdpubwf:createdBy', $holder, './hippostdpubwf:creationDate',
+                        $now, './hippostdpubwf:lastModifiedBy', $holder, './hippostdpubwf:lastModificationDate',
+                        $now, './hippostd:holder', $holder]
+      jcr:language: xpath
+      jcr:statement: //element(*,hipposysedit:namespacefolder)/element(*,mix:referenceable)/element(*,hipposysedit:templatetype)/hipposysedit:prototypes/element(hipposysedit:prototype,hippo:document)
+    /simple:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: adddocument_ico
+      hippostd:modify: [./_name, $name, ./_node/_name, $name]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/simple/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /new-document:
+          jcr:primaryType: hippo:handle
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 5787e06d-345a-4879-878b-84fa3ac830c1
+          /new-document:
+            jcr:primaryType: hippostd:document
+            jcr:mixinTypes: ['mix:versionable',]
+            jcr:uuid: c5fcf887-e0f2-4d07-813f-30606b3415e8
+            hippostd:content: <html><body></body></html>
+            hippostd:language: en
+            hippostd:state: draft
+            hippostd:stateSummary: new
+    /new-folder:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: addfolder_ico
+      hippostd:modify: [./_name, $name]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-folder/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /hippostd:folder:
+          jcr:primaryType: hippostd:folder
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: 36414d02-4f0f-475b-8443-dd6f450a6475
+          hippostd:foldertype: [new-document, new-folder]
+    /new-collection:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: addfolder_ico
+      hippostd:modify: [./_name, $name]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-collection/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /hippostd:folder:
+          jcr:primaryType: hippostd:folder
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: b280c7d2-51df-4c78-a904-5abf2dd39394
+          hippostd:foldertype: [new-collection, new-document]
+        /hippostd:directory:
+          jcr:primaryType: hippostd:directory
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: 16ef3060-aab3-4264-b190-6a16fa2e257a
+          hippostd:foldertype: [new-collection, new-document]
+    /new-translated-folder:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: addfolder_ico
+      hippostd:modify: [./_name, $name, './hippotranslation:id', $uuid, './hippotranslation:locale',
+                        $inherited]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-translated-folder/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /hippostd:folder:
+          jcr:primaryType: hippostd:folder
+          jcr:mixinTypes: ['hippotranslation:translated', 'mix:versionable']
+          jcr:uuid: ac140384-57b2-458d-8207-a66a577c1f14
+          hippostd:foldertype: [new-translated-folder, new-document]
+          hippotranslation:id: generated id
+          hippotranslation:locale: inherited locale
+    /new-file-folder:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:modify: [./_name, $name]
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-file-folder/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /asset gallery:
+          jcr:primaryType: hippogallery:stdAssetGallery
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: 11f02d97-91d6-4a55-bd6a-c862f5210d8d
+          hippostd:foldertype: [new-file-folder]
+          hippostd:gallerytype: ['hippogallery:exampleAssetSet']
+    /new-image:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:modify: [./_name, $name, ./_node/_name, $name]
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-image/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /image:
+          jcr:primaryType: hippo:handle
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: a6e18265-f84c-4b21-a348-2d6118d368ce
+          /image:
+            jcr:primaryType: hippogallery:imageset
+            jcr:mixinTypes: ['mix:versionable']
+            jcr:uuid: 407e29dd-48a7-49a6-ba4b-1fd1d68692ae
+            /hippogallery:thumbnail:
+              jcr:primaryType: hippogallery:image
+              jcr:data:
+                type: binary
+                resource: queries/templates/new-image/templates/image/image_thumbnail.jpg
+              jcr:encoding: UTF-8
+              jcr:lastModified: 2008-03-26T12:03:00+01:00
+              jcr:mimeType: image/jpeg
+    /new-image-folder:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:modify: [./_name, $name]
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-image-folder/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /image gallery:
+          jcr:primaryType: hippogallery:stdImageGallery
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: 29f51552-a7d6-439e-bee4-28a2e52768ee
+          hippostd:foldertype: [new-image-folder]
+          hippostd:gallerytype: ['hippogallery:imageset']
+    /new-namespace:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:modify: [./_name, $name]
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-namespace/hippostd:templates/namespace
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /namespace:
+          jcr:primaryType: hipposysedit:namespace
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 59a0412d-2052-41b1-8098-4c6c408170ac
+          /basedocument:
+            jcr:primaryType: hipposysedit:templatetype
+            jcr:mixinTypes: ['mix:referenceable']
+            jcr:uuid: 8f233b98-7d58-4ae7-a7c8-d452eaa9773c
+            /hipposysedit:nodetype:
+              jcr:primaryType: hippo:handle
+              jcr:mixinTypes: ['mix:referenceable']
+              jcr:uuid: 55787ecc-fdd4-41dd-9890-476f0683d29b
+              /hipposysedit:nodetype:
+                jcr:primaryType: hipposysedit:nodetype
+                jcr:mixinTypes: ['hipposysedit:remodel']
+                hipposysedit:supertype: ['hippo:document', 'hippostdpubwf:document',
+                                         'hippostd:publishableSummary']
+                hipposysedit:uri: uri
+    /new-type:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:modify: [./_name, $name, './hipposysedit:nodetype/hipposysedit:nodetype/hipposysedit:supertype[0]',
+                        $supertype]
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-type/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /document:
+          jcr:primaryType: hipposysedit:templatetype
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: a9963323-87ae-47c9-b60f-3be6ce5df838
+          /hipposysedit:nodetype:
+            jcr:primaryType: hippo:handle
+            jcr:mixinTypes: ['mix:referenceable']
+            jcr:uuid: b86882df-8751-48ba-a99a-88d6fa0a3272
+            /hipposysedit:nodetype:
+              jcr:primaryType: hipposysedit:nodetype
+              jcr:mixinTypes: ['mix:referenceable']
+              jcr:uuid: f6f5b6eb-93d5-4ffe-b161-50b8139d433f
+              hipposysedit:node: true
+              hipposysedit:supertype: ['hippo:document', 'hippostd:relaxed', 'hippotranslation:translated']
+          /hipposysedit:prototypes:
+            jcr:primaryType: hipposysedit:prototypeset
+            /hipposysedit:prototype:
+              jcr:primaryType: nt:unstructured
+              hippostd:holder: holder
+              hippostd:state: draft
+              hippostdpubwf:createdBy: ''
+              hippostdpubwf:lastModifiedBy: ''
+              hippotranslation:id: document-type-locale-id
+              hippotranslation:locale: document-type-locale
+        /compound:
+          jcr:primaryType: hipposysedit:templatetype
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: e70cfeae-e714-42e2-b630-10b69bbd70b3
+          /hipposysedit:nodetype:
+            jcr:primaryType: hippo:handle
+            jcr:mixinTypes: ['mix:referenceable']
+            jcr:uuid: b6f1f5d7-00b5-40fb-a5c8-1be496692194
+            /hipposysedit:nodetype:
+              jcr:primaryType: hipposysedit:nodetype
+              jcr:mixinTypes: ['mix:referenceable']
+              jcr:uuid: 5205b2bf-d776-4c2d-bbbd-1e3ae2168c03
+              hipposysedit:node: true
+              hipposysedit:supertype: ['hippo:compound', 'hippostd:relaxed']
+          /hipposysedit:prototypes:
+            jcr:primaryType: hipposysedit:prototypeset
+            /hipposysedit:prototype:
+              jcr:primaryType: nt:unstructured
+    /new-subsite:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:modify: [./_name, $name, './hippotranslation:id', $uuid]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-subsite/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+    /new-news-document:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:icon: adddocument_ico
+      hippostd:modify: [./_name, $name, './hippotranslation:locale', $inherited, './hippotranslation:id',
+                        $uuid, './hippostdpubwf:createdBy', $holder, './hippostdpubwf:creationDate',
+                        $now, './hippostdpubwf:lastModifiedBy', $holder, './hippostdpubwf:lastModificationDate',
+                        $now, './hippostd:holder', $holder]
+      jcr:language: xpath
+      jcr:statement: //element(*,hipposysedit:namespacefolder)/element(*,mix:referenceable)/element(*,hipposysedit:templatetype)/hipposysedit:prototypes/element(hipposysedit:prototype,myhippoproject:newsdocument)
+    /new-news-folder:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: addfolder_ico
+      hippostd:modify: [./_name, $name, './hippotranslation:id', $uuid, './hippotranslation:locale',
+                        $inherited]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: /jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-news-folder/hippostd:templates/node()
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /hippostd:folder:
+          jcr:primaryType: hippostd:folder
+          jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable']
+          jcr:uuid: 01d9f1a0-9d85-48c4-b459-cee25707cb71
+          hippostd:foldertype: [new-news-document, new-news-folder]
+          hippotranslation:id: generated id
+          hippotranslation:locale: inherited locale
+    /new-resource-bundle:
+      jcr:primaryType: hippostd:templatequery
+      hippostd:icon: adddocument_ico
+      hippostd:modify: [./_name, $name, './hippotranslation:locale', $inherited, './hippotranslation:id',
+                        $uuid, './hippostdpubwf:createdBy', $holder, './hippostdpubwf:creationDate',
+                        $now, './hippostdpubwf:lastModifiedBy', $holder, './hippostdpubwf:lastModificationDate',
+                        $now, './hippostd:holder', $holder]
+      jcr:language: xpath
+      jcr:statement: //element(*,hipposysedit:namespacefolder)/element(*,mix:referenceable)/element(*,hipposysedit:templatetype)/hipposysedit:prototypes/element(hipposysedit:prototype,resourcebundle:resourcebundle)
+    /new-untranslated-folder:
+      jcr:primaryType: hippostd:templatequery
+      jcr:mixinTypes: ['hipposys:implementation']
+      hippostd:icon: addfolder_ico
+      hippostd:modify: [./_name, $name]
+      hipposys:classname: org.hippoecm.repository.impl.query.DirectPath
+      jcr:language: xpath
+      jcr:statement: "/jcr:root/hippo:configuration/hippo:queries/hippo:templates/new-untranslated-folder/hippostd:templates/node()\n\
+          \    "
+      /hippostd:templates:
+        jcr:primaryType: hippostd:templates
+        /hippostd:folder:
+          jcr:primaryType: hippostd:folder
+          jcr:mixinTypes: ['mix:versionable']
+          jcr:uuid: 5b082dfd-d097-42be-949a-216d4b8717f1
+          hippostd:foldertype: [new-resource-bundle, new-untranslated-folder]

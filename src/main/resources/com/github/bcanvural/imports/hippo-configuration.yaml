@@ -1,0 +1,2283 @@
+/hippo:configuration:
+  jcr:primaryType: hipposys:configuration
+  /hippo:derivatives:
+    jcr:primaryType: hipposys:derivativesfolder
+    /hippo:corederivatives:
+      jcr:primaryType: hipposys:deriveddefinition
+      hipposys:classname: org.hippoecm.repository.deriveddata.CoreDerivedDataFunction
+      hipposys:nodetype: hippo:document
+      hipposys:serialver: 1
+      /hipposys:accessed:
+        jcr:primaryType: hipposys:propertyreferences
+        /ancestors:
+          jcr:primaryType: hipposys:builtinpropertyreference
+          hipposys:method: ancestors
+      /hipposys:derived:
+        jcr:primaryType: hipposys:propertyreferences
+        /ancestors:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippo:paths
+    /date:
+      jcr:primaryType: hipposys:deriveddefinition
+      hipposys:classname: org.hippoecm.faceteddate.DerivedDataFunction
+      hipposys:nodetype: hippostd:date
+      hipposys:serialver: 1
+      /hipposys:accessed:
+        jcr:primaryType: hipposys:propertyreferences
+        /date:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:date
+      /hipposys:derived:
+        jcr:primaryType: hipposys:propertyreferences
+        /year:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:year
+        /month:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:month
+        /weekofyear:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:weekofyear
+        /dayofweek:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:dayofweek
+        /dayofmonth:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:dayofmonth
+        /dayofyear:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:dayofyear
+        /hourofday:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:hourofday
+        /minute:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:minute
+        /second:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:second
+    /reviewed-action:
+      jcr:primaryType: hipposys:deriveddefinition
+      hipposys:classname: org.onehippo.repository.documentworkflow.DerivedDataFunction
+      hipposys:nodetype: hippostd:publishableSummary
+      hipposys:serialver: 1
+      /hipposys:accessed:
+        jcr:primaryType: hipposys:propertyreferences
+        /publishedAvailability:
+          jcr:primaryType: hipposys:resolvepropertyreference
+          hipposys:relPath: ../{.}[@hippostd:state='published']/hippo:availability
+        /publishedLastModified:
+          jcr:primaryType: hipposys:resolvepropertyreference
+          hipposys:relPath: ../{.}[@hippostd:state='published']/hippostdpubwf:lastModificationDate
+        /unpublishedLastModified:
+          jcr:primaryType: hipposys:resolvepropertyreference
+          hipposys:relPath: ../{.}[@hippostd:state='unpublished']/hippostdpubwf:lastModificationDate
+      /hipposys:derived:
+        jcr:primaryType: hipposys:propertyreferences
+        /summary:
+          jcr:primaryType: hipposys:relativepropertyreference
+          hipposys:relPath: hippostd:stateSummary
+  /hippo:workflows:
+    jcr:primaryType: hipposys:workflowfolder
+    jcr:uuid: c89f56e5-5e9d-4967-9850-7b6254d1791c
+    /admin:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.NullWorkflowImpl
+        hipposys:display: Unlock documents
+        hipposys:nodetype: hippo:handle
+        hipposys:privileges: ['hippo:admin']
+        hipposys:subtype: hippostdpubwf:document
+    /core:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.DefaultWorkflowImpl
+        hipposys:display: Default workflow
+        hipposys:nodetype: hippo:handle
+        hipposys:subtype: hippo:document
+      /default:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.DefaultWorkflowImpl
+        hipposys:display: Default workflow
+        hipposys:nodetype: hippo:document
+    /default:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.onehippo.repository.documentworkflow.DocumentWorkflowImpl
+        hipposys:display: Handle workflow
+        hipposys:nodetype: hippo:handle
+        hipposys:privileges: ['hippo:author']
+        hipposys:subtype: hippostdpubwf:document
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          scxml-definition: documentworkflow
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /admin:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.AdminWorkflowPlugin
+            wicket.id: ${item}
+          /publication:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.PublicationWorkflowPlugin
+            wicket.id: ${item}
+          /document:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.DocumentWorkflowPlugin
+            wicket.id: ${item}
+          /top:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.PreviewWorkflowPlugin
+            wicket.id: ${item}
+          /requests:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.RequestsWorkflowPlugin
+            wicket.id: ${item}
+          /metadata:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.DocMetaDataPlugin
+            wicket.id: ${item}
+          /channelactions:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.onehippo.cms7.channelmanager.plugins.channelactions.ChannelActionsPlugin
+            rest.proxy.service.id: hst.rest.proxy.service
+            wicket.id: ${item}
+          /socialsharing:
+            jcr:primaryType: frontend:plugin
+            document.url.service.id: live.site.document.url.service
+            plugin.class: org.onehippo.cms7.channelmanager.plugins.social.SocialSharingPlugin
+            social.media.service.id: popup.social.media.service
+            wicket.id: ${item}
+      /default:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.DefaultWorkflowImpl
+        hipposys:display: Default workflow
+        hipposys:nodetype: hippo:document
+        hipposys:privileges: ['hippo:author']
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.DefaultWorkflowPlugin
+      /edit-model:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.EditmodelWorkflowImpl
+        hipposys:display: Internal workflow to edit a template
+        hipposys:nodetype: hipposysedit:templatetype
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.EditmodelWorkflowPlugin
+    /editing:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.onehippo.repository.documentworkflow.DocumentWorkflowImpl
+        hipposys:display: Handle workflow
+        hipposys:nodetype: hippo:handle
+        hipposys:privileges: ['hippo:author']
+        hipposys:subtype: hippostdpubwf:document
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          scxml-definition: documentworkflow
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          browser.id: ${browser.id}
+          editor.id: ${editor.id}
+          model.id: ${model.id}
+          plugin.class: org.hippoecm.frontend.plugins.reviewedactions.EditingWorkflowPlugin
+          validator.id: ${validator.id}
+      /default:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.NullWorkflowImpl
+        hipposys:display: Default edit workflow
+        hipposys:nodetype: hippo:document
+        hipposys:privileges: ['hippo:author']
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /save:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.editor.workflow.EditingDefaultWorkflowPlugin
+            wicket.id: ${item}
+      /remodel:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.EditmodelWorkflowImpl
+        hipposys:display: Modelling workflow
+        hipposys:nodetype: hipposysedit:templatetype
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.TemplateEditingWorkflowPlugin
+    /embedded:
+      jcr:primaryType: hipposys:workflowcategory
+      /gallery:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in galleries
+        hipposys:nodetype: hippostd:gallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+      /folder-extended:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in folders (editors)
+        hipposys:nodetype: hippostd:folder
+        hipposys:privileges: ['hippo:editor']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /folder:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in folders (authors)
+        hipposys:nodetype: hippostd:folder
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /directory-extended:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in directories (editors)
+        hipposys:nodetype: hippostd:directory
+        hipposys:privileges: ['hippo:editor']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /directory:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in directories (authors)
+        hipposys:nodetype: hippostd:directory
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /root:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on documents in folders
+        hipposys:nodetype: rep:root
+        hipposys:privileges: ['hippo:admin']
+      /template-editor-namespace:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.NamespaceWorkflowImpl
+        hipposys:display: Template engine workflow to create a type
+        hipposys:nodetype: hipposysedit:namespace
+        hipposys:privileges: ['hippo:admin']
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+      /template-editor-namespaces:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.TemplateEditorWorkflowImpl
+        hipposys:display: Template engine workflow to create a namespace
+        hipposys:nodetype: hipposysedit:namespacefolder
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+    /folder-translations:
+      jcr:primaryType: hipposys:workflowcategory
+      /default:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.translation.impl.TranslationWorkflowImpl
+        hipposys:display: Translation workflow
+        hipposys:nodetype: hippotranslation:translated
+        hipposys:privileges: ['hippo:admin']
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.translation.workflow.FolderTranslationsWorkflowPlugin
+    /gallery:
+      jcr:primaryType: hipposys:workflowcategory
+      /image-gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.gallery.impl.GalleryWorkflowImpl
+        hipposys:display: Workflow on gallery image folders
+        hipposys:nodetype: hippogallery:stdImageGallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          fileupload.maxItems: '25'
+          gallery.processor.id: service.gallery.processor
+          gallery.thumbnail.size: 60
+          option.label: add-image
+          option.text: add-image-label
+          plugin.class: org.hippoecm.frontend.plugins.gallery.GalleryWorkflowPlugin
+          validator.id: service.gallery.image.validation
+      /asset-gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.gallery.impl.GalleryWorkflowImpl
+        hipposys:display: Workflow on asset gallery folders
+        hipposys:nodetype: hippogallery:stdAssetGallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          fileupload.maxItems: '25'
+          gallery.processor.id: asset.gallery.processor
+          gallery.thumbnail.size: 60
+          option.label: add-asset
+          option.text: add-file-label
+          plugin.class: org.hippoecm.frontend.plugins.gallery.GalleryWorkflowPlugin
+          validator.id: service.gallery.asset.validation
+    /internal:
+      jcr:primaryType: hipposys:workflowcategory
+      /root:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.RepositoryWorkflowImpl
+        hipposys:display: Workflow on root folder (RepositoryWorkflow)
+        hipposys:nodetype: rep:root
+      /folder:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders
+        hipposys:nodetype: hippostd:folder
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /directory:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on directories
+        hipposys:nodetype: hippostd:directory
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /template-editor-namespaces:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Folder based workflow on namespaces folder
+        hipposys:nodetype: hipposysedit:namespacefolder
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+      /template-editor-namespace:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Folder based workflow on namespaces folder
+        hipposys:nodetype: hipposysedit:namespace
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+    /shortcuts:
+      jcr:primaryType: hipposys:workflowcategory
+      /gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.gallery.impl.GalleryWorkflowImpl
+        hipposys:display: Shortcut workflow on gallery folders
+        hipposys:nodetype: hippostd:gallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.plugins.standardworkflow.NullWorkflowPlugin
+      /folder:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Shortcut workflow on folders
+        hipposys:nodetype: hippostd:folder
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.plugins.standardworkflow.NullWorkflowPlugin
+      /directory:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Shortcut workflow on directories
+        hipposys:nodetype: hippostd:directory
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.plugins.standardworkflow.NullWorkflowPlugin
+    /threepane:
+      jcr:primaryType: hipposys:workflowcategory
+      /image-gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on gallery image folders
+        hipposys:nodetype: hippogallery:stdImageGallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /asset-gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on asset gallery folders
+        hipposys:nodetype: hippogallery:stdAssetGallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /generic-gallery:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on gallery folders
+        hipposys:nodetype: hippostd:gallery
+        hipposys:privileges: ['hippo:author']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+      /folder-permissions:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders (admin)
+        hipposys:nodetype: hippostd:folder
+        hipposys:privileges: ['hippo:admin']
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          workflow.translated: new-translated-folder
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+            /filters:
+              jcr:primaryType: frontend:pluginconfig
+              /hideTranslation:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippo:translation
+                display: false
+              /hideTranslationsType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippotranslation:translations
+                display: false
+              /hideFacnavType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippofacnav:facetnavigation
+                display: false
+          /extended:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.ExtendedFolderWorkflowPlugin
+            wicket.id: ${item}
+          /permissions:
+            jcr:primaryType: frontend:plugin
+            exclude: [new-namespace, new-smart-folder, new-type, simple]
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.PermissionsFolderWorkflowPlugin
+            wicket.id: ${item}
+            workflow.translated: new-translated-folder
+      /folder-extended:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders (editors)
+        hipposys:nodetype: hippostd:folder
+        hipposys:privileges: ['hippo:editor']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          workflow.translated: new-translated-folder
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+            /filters:
+              jcr:primaryType: frontend:pluginconfig
+              /hideTranslation:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippo:translation
+                display: false
+              /hideTranslationsType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippotranslation:translations
+                display: false
+              /hideFacnavType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippofacnav:facetnavigation
+                display: false
+          /extended:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.ExtendedFolderWorkflowPlugin
+            wicket.id: ${item}
+      /folder:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders (authors)
+        hipposys:nodetype: hippostd:folder
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          workflow.translated: new-translated-folder
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+            /filters:
+              jcr:primaryType: frontend:pluginconfig
+              /hideTranslation:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippo:translation
+                display: false
+              /hideTranslationsType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippotranslation:translations
+                display: false
+              /hideFacnavType:
+                jcr:primaryType: frontend:pluginconfig
+                child: hippofacnav:facetnavigation
+                display: false
+      /directory-extended:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on directories (editors)
+        hipposys:nodetype: hippostd:directory
+        hipposys:privileges: ['hippo:editor']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          workflow.translated: new-translated-folder
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+          /extended:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.reviewedactions.ExtendedFolderWorkflowPlugin
+            wicket.id: ${item}
+      /directory:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on directories (authors)
+        hipposys:nodetype: hippostd:directory
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugincluster
+          frontend:references: [browser.id, editor.id, wicket.model]
+          frontend:services: [wicket.id]
+          item: ${cluster.id}.item
+          workflow.translated: new-translated-folder
+          /root:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
+          /standard:
+            jcr:primaryType: frontend:plugin
+            plugin.class: org.hippoecm.frontend.plugins.standardworkflow.FolderWorkflowPlugin
+            wicket.id: ${item}
+    /translation:
+      jcr:primaryType: hipposys:workflowcategory
+      /default:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.repository.translation.impl.TranslationWorkflowImpl
+        hipposys:display: Translation workflow
+        hipposys:nodetype: hippotranslation:translated
+        hipposys:privileges: ['hippo:author']
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.translation.workflow.TranslationWorkflowPlugin
+    /translation-copy:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.onehippo.repository.documentworkflow.DocumentWorkflowImpl
+        hipposys:display: Handle workflow
+        hipposys:nodetype: hippo:handle
+        hipposys:privileges: ['hippo:editor']
+        hipposys:subtype: hippostdpubwf:document
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          folder-workflow-category: translation-internal
+          scxml-definition: documentworkflow
+      /default:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.DefaultWorkflowImpl
+        hipposys:display: Default workflow
+        hipposys:nodetype: hippo:document
+        hipposys:privileges: ['hippo:editor']
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          folder-workflow-category: translation-internal
+    /translation-internal:
+      jcr:primaryType: hipposys:workflowcategory
+      /folder:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders
+        hipposys:nodetype: hippostd:folder
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippostdpubwf:lastModificationDate', $now, './hippostdpubwf:lastModifiedBy',
+                           $holder]
+      /directory:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on directories
+        hipposys:nodetype: hippostd:directory
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+    /versioning:
+      jcr:primaryType: hipposys:workflowcategory
+      /handle:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.onehippo.repository.documentworkflow.DocumentWorkflowImpl
+        hipposys:display: Versioning workflow
+        hipposys:nodetype: hippo:handle
+        hipposys:privileges: ['hippo:author']
+        hipposys:subtype: hippostdpubwf:document
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          scxml-definition: documentworkflow
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          editor.id: ${editor.id}
+          plugin.class: org.hippoecm.frontend.plugins.reviewedactions.VersionWorkflowPlugin
+    /brokenlinks:
+      jcr:primaryType: hipposys:workflowcategory
+      /reportbrokenlinks:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.onehippo.cms7.brokenlinks.ReportBrokenLinksWorkflowImpl
+        hipposys:display: Checks broken external links
+        hipposys:nodetype: hippo:document
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+    /committype:
+      jcr:primaryType: hipposys:workflowcategory
+      /commit:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.EditmodelWorkflowImpl
+        hipposys:display: remodelling workflow
+        hipposys:nodetype: hipposysedit:templatetype
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.CommitTypeWorkflowPlugin
+    /editor:
+      jcr:primaryType: hipposys:workflowcategory
+      /template-editor-namespace:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.NamespaceWorkflowImpl
+        hipposys:display: Template engine workflow to create a type
+        hipposys:nodetype: hipposysedit:namespace
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.NamespaceWorkflowPlugin
+      /template-editor-namespaces:
+        jcr:primaryType: frontend:workflow
+        hipposys:classname: org.hippoecm.editor.repository.impl.TemplateEditorWorkflowImpl
+        hipposys:display: Template engine workflow to create a namespace
+        hipposys:nodetype: hipposysedit:namespacefolder
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /frontend:renderer:
+          jcr:primaryType: frontend:plugin
+          plugin.class: org.hippoecm.frontend.editor.workflow.TemplateEditorWorkflowPlugin
+    /translate:
+      jcr:primaryType: hipposys:workflowcategory
+    /subsite:
+      jcr:primaryType: hipposys:workflowcategory
+      /folder:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders
+        hipposys:nodetype: hippostd:folder
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+      /directory:
+        jcr:primaryType: hipposys:workflow
+        hipposys:classname: org.hippoecm.repository.standardworkflow.FolderWorkflowImpl
+        hipposys:display: Workflow on folders
+        hipposys:nodetype: hippostd:directory
+        /hipposys:types:
+          jcr:primaryType: hipposys:types
+        /hipposys:config:
+          jcr:primaryType: nt:unstructured
+          attic:
+            type: path
+            value: /content/attic
+          modify-on-copy: ['./hippotranslation:id', $uuid]
+  /hippo:security:
+    jcr:primaryType: hipposys:securityfolder
+    hipposys:domainspath: hippo:configuration/hippo:domains
+    hipposys:groupspath: hippo:configuration/hippo:groups
+    hipposys:rolespath: hippo:configuration/hippo:roles
+    hipposys:userspath: hippo:configuration/hippo:users
+    /internal:
+      jcr:primaryType: hipposys:securityprovider
+      hipposys:classname: org.hippoecm.repository.security.RepositorySecurityProvider
+      /hipposys:userprovider:
+        jcr:primaryType: hipposys:userprovider
+        hipposys:dirlevels: 0
+      /hipposys:groupprovider:
+        jcr:primaryType: hipposys:groupprovider
+        hipposys:dirlevels: 0
+    /hipposys:accessmanager:
+      jcr:primaryType: hipposys:accessmanager
+      hipposys:permissioncachesize: 20000
+  /hippo:groups:
+    jcr:primaryType: hipposys:groupfolder
+    /admin:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [admin, workflowuser]
+      hipposys:securityprovider: internal
+    /author:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [author]
+      hipposys:securityprovider: internal
+    /editor:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [editor]
+      hipposys:securityprovider: internal
+    /everybody:
+      jcr:primaryType: hipposys:group
+      hipposys:description: ''
+      hipposys:members: ['*']
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /webmaster:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [editor]
+      hipposys:securityprovider: internal
+    /liveusers:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [liveuser]
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /previewusers:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [previewuser]
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /sitewriters:
+      jcr:primaryType: hipposys:group
+      hipposys:members: [sitewriter]
+      hipposys:securityprovider: internal
+      hipposys:system: true
+  /hippo:users:
+    jcr:primaryType: hipposys:userfolder
+    /admin:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:password: $SHA-256$HIlytXwnqSU=$NqCi2sJoM4qAwQ8136GYueUVA/TSyidpAI3Evn+y/hc=
+      hipposys:securityprovider: internal
+    /workflowuser:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:password: $SHA-256$*
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /configuser:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:passkey: jvm://
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /liveuser:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:passkey: jvm://
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /previewuser:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:passkey: jvm://
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /sitewriter:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:passkey: jvm://
+      hipposys:securityprovider: internal
+      hipposys:system: true
+    /author:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:password: author
+      hipposys:securityprovider: internal
+    /editor:
+      jcr:primaryType: hipposys:user
+      hipposys:active: true
+      hipposys:password: editor
+      hipposys:securityprovider: internal
+  /hippo:domains:
+    jcr:primaryType: hipposys:domainfolder
+    /everywhere:
+      jcr:primaryType: hipposys:domain
+      /all-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /match-all-types:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: '*'
+      /admin:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [admin]
+        hipposys:role: admin
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:role: readonly
+        hipposys:users: [configuser]
+    /defaultread:
+      jcr:primaryType: hipposys:domain
+      /rep-root:
+        jcr:primaryType: hipposys:domainrule
+        /type-rep-root:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: rep:root
+      /hippo-configuration:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-configuration:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:configuration
+      /hippo-derivativesfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-derivativesfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:derivativesfolder
+      /hippo-queryfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-queryfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:queryfolder
+      /hippo-applicationfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-applicationfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:applicationfolder
+      /hippo-userfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-userfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:userfolder
+      /hippo-facetsubsearch:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetsubsearch:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:facetsubsearch
+      /hippo-facetresult:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetresult:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:facetresult
+      /hippo-deriveddefinition:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-deriveddefinition:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:deriveddefinition
+      /hippo-propertyreferences:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-propertyreferences:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:propertyreferences
+      /hippo-propertyreference:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-propertyreference:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:propertyreference
+      /hippostd-translations:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippostd-translations:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostd:translations
+      /hippostd-templates:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippostd-templates:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostd:templates
+      /nt-unstructured:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-unstructured:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:unstructured
+      /hippo-facetsearch:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetsearch:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:facetsearch
+      /hippofacnav-facetnavigation:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippofacnav-facetnavigation:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippofacnav:facetnavigation
+      /hippofacnav-abstractfacetnavigation:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippofacnav-abstractfacetnavigation:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippofacnav:abstractfacetnavigation
+      /hippo-facetselect:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetselect:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:facetselect
+      /hippo-mirror:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-mirror:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:mirror
+      /hippo-handle:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-handle:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:handle
+      /document-holder:
+        jcr:primaryType: hipposys:domainrule
+        /match_holder_with_username:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: hippostd:holder
+          hipposys:filter: false
+          hipposys:type: String
+          hipposys:value: __user__
+      /self:
+        jcr:primaryType: hipposys:domainrule
+        /match-nodename-with-username:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodename
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: __user__
+        /type-hippo-user:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:user
+      /hippo-translation:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-translation:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:translation
+      /hippo-securityfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-securityfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:securityfolder
+      /hippo-groupfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-groupfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:groupfolder
+      /self-groups:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-group:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:group
+        /match-members-with-username:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: hipposys:members
+          hipposys:filter: false
+          hipposys:type: String
+          hipposys:value: __user__
+      /hippostd-html:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippostd-html:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostd:html
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+      /hippo-compound:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-compound:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:compound
+    /defaultwrite:
+      jcr:primaryType: hipposys:domain
+      /nt-unstructured:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-unstructured:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:unstructured
+      /hippo-facetsearch:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetsearch:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:facetsearch
+      /hippo-facetselect:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-facetselect:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:facetselect
+      /hippo-mirror:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-mirror:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:mirror
+      /hippo-handle:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-handle:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:handle
+      /document-holder:
+        jcr:primaryType: hipposys:domainrule
+        /match_holder_with_username:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: hippostd:holder
+          hipposys:filter: false
+          hipposys:type: String
+          hipposys:value: __user__
+      /self:
+        jcr:primaryType: hipposys:domainrule
+        /match-nodename-with-username:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodename
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: __user__
+        /type-hippo-user:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:user
+      /hippo-translation:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-translation:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:translation
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [author, editor, admin]
+        hipposys:role: readwrite
+    /hippodocuments:
+      jcr:primaryType: hipposys:domain
+      /hippo-document:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-document:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:document
+        /hide-prototypes:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: nodename
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposysedit:prototype
+      /editor:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [admin, editor]
+        hipposys:role: editor
+      /author:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [author]
+        hipposys:role: author
+    /hippofolders:
+      jcr:primaryType: hipposys:domain
+      /hippostd-folder:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippostd-folder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostd:folder
+      /hippostd-directory:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippostd-directory:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostd:directory
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [author, editor]
+        hipposys:role: readwrite
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [sitewriters]
+        hipposys:role: readonly
+    /hippolog:
+      jcr:primaryType: hipposys:domain
+      /hippolog-item:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippolog-item:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippolog:item
+      /hippolog-folder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippolog-folder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippolog:folder
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+    /hippomodules:
+      jcr:primaryType: hipposys:domain
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+      /modulefolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-modulefolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:modulefolder
+      /module:
+        jcr:primaryType: hipposys:domainrule
+        /type-module:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:module
+      /moduleconfig:
+        jcr:primaryType: hipposys:domainrule
+        /type-moduleconfig:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:moduleconfig
+    /hipporequests:
+      jcr:primaryType: hipposys:domain
+      /hippo-request:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-request:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:request
+      /editor:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [editor]
+        hipposys:role: editor
+      /author:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [author]
+        hipposys:role: author
+    /versioning:
+      jcr:primaryType: hipposys:domain
+      /nt-system:
+        jcr:primaryType: hipposys:domainrule
+        /type-rep-system:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: rep:system
+      /nt-versionStorage:
+        jcr:primaryType: hipposys:domainrule
+        /type-rep-versionStorage:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: rep:versionStorage
+      /nt-versionHistory:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-versionHistory:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:versionHistory
+      /nt-versionlabels:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-versionlabels:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:versionLabels
+      /nt-version:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-version:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:version
+      /nt-frozennode:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-frozennode:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:frozenNode
+      /nt-versionedchild:
+        jcr:primaryType: hipposys:domainrule
+        /type-nt-versionedchild:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: nt:versionedChild
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+      /editor:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [editor]
+        hipposys:role: editor
+    /workflow:
+      jcr:primaryType: hipposys:domain
+      /hippo-type:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-type:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:type
+      /hippo-request:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-request:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:request
+      /hippo-workflow:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-workflow:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:workflow
+      /hippo-workflowfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-workflowfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:workflowfolder
+      /hippo-workflowcategory:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-workflowcategory:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposys:workflowcategory
+      /hipposched-trigger:
+        jcr:primaryType: hipposys:domainrule
+        /type-hipposched-trigger:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposched:trigger
+      /hipposched-triggers:
+        jcr:primaryType: hipposys:domainrule
+        /type-hipposched-triggers:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposched:triggers
+      /hippo-query:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippo-query:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:query
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+      /hippostdpubwf-request:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippostdpubwf-request:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippostdpubwf:request
+      /frontend-workflow:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-workflow:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:workflow
+    /frontendconfig:
+      jcr:primaryType: hipposys:domain
+      /frontend-cluster:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-cluster:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:clusterfolder
+      /frontend-plugincluster:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-plugincluster:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:plugincluster
+      /frontend-plugins:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-plugin:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:plugin
+        /exclude-admin:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: plugin.class
+          hipposys:filter: false
+          hipposys:type: String
+          hipposys:value: org.hippoecm.frontend.plugins.cms.admin.AdminPerspective
+        /exclude-dev-perspective:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: cluster.name
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: cms-dev
+        /exclude-publishall:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: plugin.class
+          hipposys:filter: false
+          hipposys:type: String
+          hipposys:value: org.hippoecm.frontend.plugins.reviewedactions.PublishAllShortcutPlugin
+        /exclude-configuration-in-cms-tree:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: cluster.name
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: cms-tree-views/configuration
+      /frontend-pluginconfig:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-pluginconfig:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:pluginconfig
+      /frontend-listener:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-listener:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:listener
+      /frontend-application:
+        jcr:primaryType: hipposys:domainrule
+        /type-frontend-application:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: frontend:application
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [everybody]
+        hipposys:role: readonly
+    /hippogallery:
+      jcr:primaryType: hipposys:domain
+      /hippogallery-exampleimageset:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippogallery-exampleimageset:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippogallery:exampleImageSet
+      /hippogallery-imageset:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippogallery-imageset:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippogallery:imageset
+      /hippogallery-exampleassetset:
+        jcr:primaryType: hipposys:domainrule
+        /type-hippogallery-exampleassetset:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippogallery:exampleAssetSet
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [author, editor]
+        hipposys:role: readwrite
+    /brokenlinks:
+      jcr:primaryType: hipposys:domain
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [editor, author]
+        hipposys:role: readonly
+      /brokenlink:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-request:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: brokenlinks:link
+    /formdata:
+      jcr:primaryType: hipposys:domain
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [sitewriters]
+        hipposys:role: readwrite
+      /formdata-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /hst-formdata:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:formdata
+      /formdatacontainer-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /hst-formdatacontainer:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:formdatacontainer
+      /formfieldvalue-nodes:
+        jcr:primaryType: hipposys:domainrule
+        /hst-formfieldvalue:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:formfieldvalue
+    /hstconfig:
+      jcr:primaryType: hipposys:domain
+      /readwrite:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [webmaster]
+        hipposys:role: readwrite
+      /hst-descriptive:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-descriptive:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:descriptive
+      /hst-template:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-template:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:template
+      /hst-templates:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-templates:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:templates
+      /hst-abstractcomponent:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-abstractcomponent:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:abstractcomponent
+      /hst-component:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-component:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:component
+      /hst-containeritemcomponent:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-containeritemcomponent:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:containeritemcomponent
+      /hst-containercomponent:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-containercomponent:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:containercomponent
+      /hst-containercomponentreference:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-containtercomponent:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:containercomponentreference
+      /hst-containteritempackage:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-containeritempackage:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:containeritempackage
+      /hst-catalog:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-catalog:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:catalog
+      /hst-components:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-components:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:components
+      /hst-pages:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-pages:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:pages
+      /hst-sitemap:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemap:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemap
+      /hst-sitemapitem:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemapitem:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemapitem
+      /hst-sitemapitemhandler:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemapitemhandler:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemapitemhandler
+      /hst-sitemapitemhandlers:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemapitemhandlers:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemapitemhandlers
+      /hst-sitemenuitem:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemenuitem:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemenuitem
+      /hst-sitemenu:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemenu:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemenu
+      /hst-sitemenus:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sitemenus:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sitemenus
+      /hst-configuration:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-configuration:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:configuration
+      /hst-configurations:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-configurations:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:configurations
+      /hst-site:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-site:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:site
+      /hst-sites:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-sites:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:sites
+      /hst-primarydomain:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-primarydomain:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:primarydomain
+      /hst-redirectdomain:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-redirectdomain:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:redirectdomain
+      /hst-mount:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-mount:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:mount
+      /hst-portmount:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-portmount:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:portmount
+      /hst-virtualhost:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-virtualhost:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:virtualhost
+      /hst-virtualhostgroup:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-virtualhostgroup:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:virtualhostgroup
+      /hst-virtualhosts:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-virtualhosts:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:virtualhosts
+      /hst-blueprint:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-blueprint:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:blueprint
+      /hst-blueprints:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-blueprints:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:blueprints
+      /hst-hst:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-hst:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:hst
+      /hst-contentshare:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-contentshare:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:contentshare
+      /hst-channel:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-channel:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:channel
+      /hst-channels:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-channels:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:channels
+      /hst-channelinfo:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-channelinfo:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:channelinfo
+      /hst-workspace:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-workspace:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:workspace
+      /hst-containercomponentfolder:
+        jcr:primaryType: hipposys:domainrule
+        /type-hst-containercomponentfolder:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:primaryType
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hst:containercomponentfolder
+    /live-documents:
+      jcr:primaryType: hipposys:domain
+      /hippo-document:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-document:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:document
+        /hide-prototypes:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: nodename
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposysedit:prototype
+        /availability-live:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: hippo:availability
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: live
+        /exclude-attic:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: jcr:path
+          hipposys:filter: false
+          hipposys:type: Reference
+          hipposys:value: /content/attic
+        /state-not-draft:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: hippostd:state
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: draft
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [liveusers]
+        hipposys:role: readonly
+    /preview-documents:
+      jcr:primaryType: hipposys:domain
+      /hippo-document:
+        jcr:primaryType: hipposys:domainrule
+        /nodetype-hippo-document:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: nodetype
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hippo:document
+        /hide-prototypes:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: nodename
+          hipposys:filter: false
+          hipposys:type: Name
+          hipposys:value: hipposysedit:prototype
+        /availability-preview:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: hippo:availability
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: preview
+        /exclude-attic:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: jcr:path
+          hipposys:filter: false
+          hipposys:type: Reference
+          hipposys:value: /content/attic
+        /state-not-draft:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: false
+          hipposys:facet: hippostd:state
+          hipposys:filter: true
+          hipposys:type: String
+          hipposys:value: draft
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [previewusers]
+        hipposys:role: readonly
+    /webfiles:
+      jcr:primaryType: hipposys:domain
+      /readonly:
+        jcr:primaryType: hipposys:authrole
+        hipposys:groups: [liveusers, previewusers, sitewriters, webmaster]
+        hipposys:role: readonly
+      /webfiles-domain:
+        jcr:primaryType: hipposys:domainrule
+        /read-webfiles-and-descendants:
+          jcr:primaryType: hipposys:facetrule
+          hipposys:equals: true
+          hipposys:facet: jcr:path
+          hipposys:filter: false
+          hipposys:type: Reference
+          hipposys:value: /webfiles
+  /hippo:roles:
+    jcr:primaryType: hipposys:rolefolder
+    /admin:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:all', 'hippo:admin']
+      hipposys:roles: [editor]
+    /author:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:read', 'hippo:author']
+    /editor:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:read', 'jcr:write', 'hippo:editor']
+      hipposys:roles: [author]
+    /readonly:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:read']
+    /readwrite:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['jcr:read', 'jcr:write']
+    /restuser:
+      jcr:primaryType: hipposys:role
+      hipposys:privileges: ['hippo:rest']

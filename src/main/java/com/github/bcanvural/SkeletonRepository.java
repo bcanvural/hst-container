@@ -14,16 +14,21 @@ import javax.jcr.nodetype.NodeType;
 
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.hippoecm.hst.core.jcr.RuntimeRepositoryException;
+import org.hippoecm.repository.security.HippoSecurityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import com.bloomreach.ps.brxm.jcr.repository.InMemoryJcrRepository;
 import com.bloomreach.ps.brxm.jcr.repository.utils.ImporterUtils;
 
 import static org.hippoecm.repository.api.HippoNodeType.HIPPO_PATHS;
+
+// TODO: Decide which yamls should be provided by lib / client
+//  Decide How to use InmemoryJcrRepository
+//  Should the use of hipposecuritymanager be optional? (adds +2 seconds or so)
+//  Revisit jmvenabledusers. (or even session-pools)
 
 public class SkeletonRepository extends InMemoryJcrRepository {
 
@@ -31,6 +36,7 @@ public class SkeletonRepository extends InMemoryJcrRepository {
 
     private List<String> cndResourcesPatterns;
     private List<String> yamlResourcesPatterns;
+    private List<String> contributedYamlResourcesPatterns;
 
     public SkeletonRepository(List<String> cndResourcesPatterns, List<String> contributedCndResourcesPatterns,
                               List<String> yamlResourcesPatterns, List<String> contributedYamlResourcesPatterns)
@@ -40,17 +46,31 @@ public class SkeletonRepository extends InMemoryJcrRepository {
         this.cndResourcesPatterns.addAll(contributedCndResourcesPatterns);
 
         this.yamlResourcesPatterns = yamlResourcesPatterns;
-        this.yamlResourcesPatterns.addAll(contributedYamlResourcesPatterns);
+        this.contributedYamlResourcesPatterns = contributedYamlResourcesPatterns;
 
     }
 
-    public void init() {
+    public void init() throws Exception {
         Session session = null;
         try {
+
+            Session systemSession = originalRepository.getRootSession("default").impersonate(new SimpleCredentials("system", "".toCharArray()));
+            registerCnds(systemSession, cndResourcesPatterns);
+            importYamlResources(systemSession, yamlResourcesPatterns);
+
+            HippoSecurityManager securityManager = (HippoSecurityManager) originalRepository.getSecurityManager();
+            originalRepository.getSecurityManager().init(originalRepository, originalRepository.getRootSession("default"));
+            securityManager.configure();
+
+
             session = this.login(new SimpleCredentials("admin", "admin".toCharArray()));
+
             registerCnds(session, cndResourcesPatterns);
-            importYamlResources(session, yamlResourcesPatterns);
+            importYamlResources(session, contributedYamlResourcesPatterns);
+            importTemplates(session);
             recalculateHippoPaths("/content");
+
+
         } catch (RepositoryException e) {
             e.printStackTrace();
         } finally {
@@ -71,6 +91,19 @@ public class SkeletonRepository extends InMemoryJcrRepository {
             }
             session.save();
 
+        } catch (Exception ex) {
+            throw new RepositoryException(ex);
+        }
+    }
+
+    private void importTemplates(Session session) throws RepositoryException {
+        try {
+            Resource[] resources = resolveResourcePattern("classpath*:com/github/bcanvural/imports/templates.yaml");
+            for (Resource resource : resources) {
+                ImporterUtils.importYaml(resource.getURL(), session.getRootNode(),
+                        "/hippo:configuration", "hippostd:folder");
+            }
+            session.save();
         } catch (Exception ex) {
             throw new RepositoryException(ex);
         }

@@ -102,8 +102,40 @@
     <!--repository-->
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-plugin-selections-addon-repository</artifactId>
+      <version>${hippo-repository.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms-editor-repository</artifactId>
+      <version>${hippo-repository.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-services-webfiles</artifactId>
+      <version>4.6.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms-reporting-repository</artifactId>
+      <version>${hippo-repository.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-repository</artifactId>
+      <version>${hippo-repository.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-workflow</artifactId>
       <version>${hippo-repository.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jta_1.1_spec</artifactId>
+      <version>1.1.1</version>
     </dependency>
     <!--hst-->
 
