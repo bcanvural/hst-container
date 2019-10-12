@@ -1,3 +1,8 @@
+#
+
+This experimental project has become part of BRUT https://github.com/bloomreach-forge/brut
+
+
 # Hst-TestContainer
 
 Start an hst-container from scratch and potentially run tests against different hst pipelines
