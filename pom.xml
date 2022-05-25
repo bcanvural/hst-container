@@ -64,7 +64,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <hst.version>5.6.0</hst.version>
-    <spring.version>4.3.18.RELEASE</spring.version>
+    <spring.version>5.2.22.RELEASE</spring.version>
     <javax.servlet-api.version>3.0.1</javax.servlet-api.version>
     <hippo-essentials.version>4.6.0</hippo-essentials.version>
     <slf4j.version>1.7.5</slf4j.version>
